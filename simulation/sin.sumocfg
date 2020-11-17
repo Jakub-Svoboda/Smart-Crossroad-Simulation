@@ -1,0 +1,7 @@
+<configuration>
+	<input>
+		<net-file value="sin.net.xml"/>
+		<route-files value="sin.rou.xml"/>
+		<additional-files value="sin.add.xml"/>
+	</input>
+</configuration>
