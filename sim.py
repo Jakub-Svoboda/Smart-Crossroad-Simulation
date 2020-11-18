@@ -4,6 +4,9 @@ import optparse
 import paho.mqtt.client as mqtt
 import time
 
+northProgram = "northBalanced"
+southProgram = "southBalanced"
+
 # import  python modules from the $SUMO_HOME/tools directory
 # source: https://sumo.dlr.de/docs/TraCI/Interfacing_TraCI_from_Python.html
 if 'SUMO_HOME' in os.environ:
@@ -29,19 +32,13 @@ def run(client):
 	step = 0
 	while traci.simulation.getMinExpectedNumber() > 0: 	#simulation end condition
 		traci.simulationStep()							#time advance
-		#print(step)
-		client.publish("sin/crossroad/north", str(step))
 
-		det_vehs = traci.inductionloop.getLastStepVehicleIDs("det_0")
-		#for veh in det_vehs:
-			#print(veh)
-
-			#traci.vehicle.changeLane(veh, 2, 25)
-
-		# if step == 100:
-		#     traci.vehicle.changeTarget("1", "e9")
-		#     traci.vehicle.changeTarget("3", "e9")
-
+		traffic = traci.lanearea.getLastStepOccupancy("det_1")
+		client.publish("sin/crossroad/north", str(traffic))
+		traffic2 = traci.lanearea.getLastStepOccupancy("det_2")
+		client.publish("sin/crossroad/south", str(traffic2))
+		traci.trafficlight.setProgram("n5", northProgram)
+		traci.trafficlight.setProgram("n2", southProgram)
 		step += 1
 
 	traci.close()
@@ -49,29 +46,25 @@ def run(client):
 
 
 def startMqtt():
-	#broker_address="192.168.1.184"
-	#broker_address="iot.eclipse.org"
 	broker_address="broker.hivemq.com"
-	#print("creating new instance")
 	client = mqtt.Client("simulation") #create new instance
 	client.on_message=on_message #attach function to callback
-	#print("connecting to broker")
 	client.connect(broker_address) #connect to broker
 	client.loop_start() #start the loop
-	#print("Subscribing to topic","house/bulbs/bulb1")
 	client.subscribe("sin/crossroad/north")
 	client.subscribe("sin/crossroad/south")
-	#print("Publishing message to topic","house/bulbs/bulb1")
-	#client.publish("sin/crossroad/north","OFF")
-	#time.sleep(4) # wait
-	#client.loop_stop() #stop the loop
+	client.subscribe("sin/crossroad/setNorth")
+	client.subscribe("sin/crossroad/setSouth")
 	return client
 
 def on_message(client, userdata, message):
-	print("message received " ,str(message.payload.decode("utf-8")))
-	#print("message topic=",message.topic)
-	#print("message qos=",message.qos)
-	#print("message retain flag=",message.retain)
+	msg = str(message.payload.decode("utf-8"))
+	if message.topic == "sin/crossroad/setNorth":
+		global northProgram
+		northProgram = msg
+	elif message.topic == "sin/crossroad/setSouth":
+		global southProgram
+		southProgram = msg
 
 
 # main entry point

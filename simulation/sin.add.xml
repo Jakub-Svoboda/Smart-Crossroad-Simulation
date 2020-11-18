@@ -12,6 +12,76 @@
 		</interval>
     </rerouter>-->>
 
-    <e1Detector id="det_0" lane="e4_0" pos="10" freq="500" file="det.out.xml" />
+    <!--<e1Detector id="det_0" lane="e4_0" pos="10" freq="500" file="det.out.xml" />-->
+    <laneAreaDetector id="det_1" lanes="e4_0" pos="50" endPos="93.47" freq="500" file="det1.out.xml" /> 
+    <laneAreaDetector id="det_2" lanes="-e3_0" pos="25" endPos="68.12" freq="500" file="det2.out.xml" /> 
+  
+  <tlLogic id="n5" type="static" programID="northNSBoost" offset="0">
+        <phase duration="32" state="GGgrrrGGgrrr"/>
+        <phase duration="3" state="yyyrrryyyrrr"/>
+        <phase duration="52" state="rrrGGgrrrGGg"/>
+        <phase duration="3" state="rrryyyrrryyy"/>
+  </tlLogic>
+  <tlLogic id="n5" type="static" programID="northEWBoost" offset="0">
+        <phase duration="52" state="GGgrrrGGgrrr"/>
+        <phase duration="3" state="yyyrrryyyrrr"/>
+        <phase duration="32" state="rrrGGgrrrGGg"/>
+        <phase duration="3" state="rrryyyrrryyy"/>
+  </tlLogic>
+  <tlLogic id="n5" type="static" programID="northNSOnly" offset="0">
+        <phase duration="90" state="rrrGGgrrrGGg"/>
+  </tlLogic> 
+  <tlLogic id="n5" type="static" programID="northEWOnly" offset="0">
+        <phase duration="90" state="GGgrrrGGgrrr"/>
+  </tlLogic>
+  <tlLogic id="n5" type="static" programID="northBalanced" offset="0">
+        <phase duration="42" state="GGgrrrGGgrrr"/>
+        <phase duration="3" state="yyyrrryyyrrr"/>
+        <phase duration="42" state="rrrGGgrrrGGg"/>
+        <phase duration="3" state="rrryyyrrryyy"/>
+  </tlLogic>
 
+
+  
+  <tlLogic id="n2" type="static" programID="southNEBoost" offset="0">
+        <phase duration="47" state="GGGrrr"/>
+        <phase duration="3" state="yyyrrr"/>
+        <phase duration="17" state="rrGGGr"/>
+        <phase duration="3" state="rryyyr"/>
+        <phase duration="17" state="GrrrGG"/>
+        <phase duration="3" state="yrrryy"/>
+    </tlLogic>
+  <tlLogic id="n2" type="static" programID="southNWBoost" offset="0">
+        <phase duration="17" state="GGGrrr"/>
+        <phase duration="3" state="yyyrrr"/>
+        <phase duration="17" state="rrGGGr"/>
+        <phase duration="3" state="rryyyr"/>
+        <phase duration="47" state="GrrrGG"/>
+        <phase duration="3" state="yrrryy"/>
+    </tlLogic>
+    <tlLogic id="n2" type="static" programID="southEWBoost" offset="0">
+        <phase duration="17" state="GGGrrr"/>
+        <phase duration="3" state="yyyrrr"/>
+        <phase duration="47" state="rrGGGr"/>
+        <phase duration="3" state="rryyyr"/>
+        <phase duration="17" state="GrrrGG"/>
+        <phase duration="3" state="yrrryy"/>
+    </tlLogic>
+    <tlLogic id="n2" type="static" programID="southNEOnly" offset="0">
+        <phase duration="90" state="GGGrrr"/>
+    </tlLogic>
+    <tlLogic id="n2" type="static" programID="southNWOnly" offset="0">
+        <phase duration="90" state="GrrrGG"/>
+    </tlLogic> 
+    <tlLogic id="n2" type="static" programID="southEWOnly" offset="0">
+        <phase duration="90" state="rrGGGr"/>
+    </tlLogic> 
+    <tlLogic id="n2" type="static" programID="southBalanced" offset="0">
+        <phase duration="27" state="GGGrrr"/>
+        <phase duration="3" state="yyyrrr"/>
+        <phase duration="27" state="rrGGGr"/>
+        <phase duration="3" state="rryyyr"/>
+        <phase duration="27" state="GrrrGG"/>
+        <phase duration="3" state="yrrryy"/>
+    </tlLogic>
 </additionals>

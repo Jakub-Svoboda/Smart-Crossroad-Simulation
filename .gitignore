@@ -1,3 +1,10 @@
+#custom
+.*det.out.xml
+det1.out.xml
+det2.out.xml
+ui.ui.autosave
+log.xml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
