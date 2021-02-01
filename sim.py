@@ -1,11 +1,18 @@
+# Author: Jakub Svoboda
+# Date: 23.11.2020
+# Email: xsvobo0z@stud.fit.vutbr.cz, svo.jakub95@gmail.com
+#
+# This script runs a simulation of a traffic crossroad in SUMO/TraCI
+
+
 import os
 import sys
 import optparse
 import paho.mqtt.client as mqtt
 import time
 
-northProgram = "northBalanced"
-southProgram = "southBalanced"
+NS = False
+EW = False
 
 # import  python modules from the $SUMO_HOME/tools directory
 # source: https://sumo.dlr.de/docs/TraCI/Interfacing_TraCI_from_Python.html
@@ -32,13 +39,18 @@ def run(client):
 	step = 0
 	while traci.simulation.getMinExpectedNumber() > 0: 	#simulation end condition
 		traci.simulationStep()							#time advance
+		trafficNNS = (traci.lanearea.getLastStepOccupancy("NNS") + traci.lanearea.getLastStepOccupancy("NNS2")) / 2 #North South has two detection zones, get average
+		trafficNEW = (traci.lanearea.getLastStepOccupancy("NEW") + traci.lanearea.getLastStepOccupancy("NEW2")) / 2 #East West
+		client.publish("sin/crossroad/north/occupancy", str(trafficNNS - trafficNEW))								#send to controller
+		if(EW == False and NS == False):	#Set program to balanced
+			traci.trafficlight.setProgram("n5", "northBalanced")
+		elif(EW == True):					#Allow north/south 
+			traci.trafficlight.setProgram("n5", "northEWOnly")
+		elif(NS == True):					#allow east/west
+			traci.trafficlight.setProgram("n5", "northNSOnly")
 
-		traffic = traci.lanearea.getLastStepOccupancy("det_1")
-		client.publish("sin/crossroad/north", str(traffic))
-		traffic2 = traci.lanearea.getLastStepOccupancy("det_2")
-		client.publish("sin/crossroad/south", str(traffic2))
-		traci.trafficlight.setProgram("n5", northProgram)
-		traci.trafficlight.setProgram("n2", southProgram)
+		client.publish("sin/currentProgram",traci.trafficlight.getProgram("n5"))
+
 		step += 1
 
 	traci.close()
@@ -47,24 +59,31 @@ def run(client):
 
 def startMqtt():
 	broker_address="broker.hivemq.com"
+	#broker_address="localhost"
 	client = mqtt.Client("simulation") #create new instance
 	client.on_message=on_message #attach function to callback
 	client.connect(broker_address) #connect to broker
 	client.loop_start() #start the loop
-	client.subscribe("sin/crossroad/north")
-	client.subscribe("sin/crossroad/south")
-	client.subscribe("sin/crossroad/setNorth")
-	client.subscribe("sin/crossroad/setSouth")
+	client.subscribe("sin/crossroad/setNNS")
+	client.subscribe("sin/crossroad/setNEW")
+	client.subscribe("sin/currentProgram")
 	return client
 
 def on_message(client, userdata, message):
 	msg = str(message.payload.decode("utf-8"))
-	if message.topic == "sin/crossroad/setNorth":
-		global northProgram
-		northProgram = msg
-	elif message.topic == "sin/crossroad/setSouth":
-		global southProgram
-		southProgram = msg
+	if message.topic == "sin/crossroad/setNNS":
+		global NS
+		if msg == "TRUE":
+			NS = True
+		else:
+			NS = False	
+	elif message.topic == "sin/crossroad/setNEW":		
+		global EW
+		if msg == "TRUE":
+			EW = True
+		else:
+			EW = False
+
 
 
 # main entry point

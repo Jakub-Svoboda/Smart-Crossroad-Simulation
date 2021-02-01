@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 02/01/21 16:21:43 by Eclipse SUMO GUI Version 1.7.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="simulation/sin.net.xml"/>
+        <route-files value="simulation/sin.rou.xml"/>
+        <additional-files value="simulation/sin.add.xml"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="simulation/log.xml"/>
+    </output>
+
+    <traci_server>
+        <remote-port value="55668"/>
+    </traci_server>
+
+</configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e2_file.xsd">
+   <interval begin="0.00" end="500.00" id="NNS2" sampledSeconds="272.86" nVehEntered="16" nVehLeft="16" nVehSeen="16" meanSpeed="2.39" meanTimeLoss="12.97" meanOccupancy="7.18" maxOccupancy="27.94" meanMaxJamLengthInVehicles="0.29" meanMaxJamLengthInMeters="1.67" maxJamLengthInVehicles="2" maxJamLengthInMeters="13.37" jamLengthInVehiclesSum="147" jamLengthInMetersSum="833.47" meanHaltingDuration="14.36" maxHaltingDuration="40.00" haltingDurationSum="158.00" meanIntervalHaltingDuration="14.36" maxIntervalHaltingDuration="40.00" intervalHaltingDurationSum="158.00" startedHalts="11.00" meanVehicleNumber="0.57" maxVehicleNumber="2" />
+   <interval begin="500.00" end="818.00" id="NNS2" sampledSeconds="120.73" nVehEntered="10" nVehLeft="10" nVehSeen="10" meanSpeed="3.38" meanTimeLoss="7.99" meanOccupancy="4.83" maxOccupancy="27.94" meanMaxJamLengthInVehicles="0.15" meanMaxJamLengthInMeters="0.82" maxJamLengthInVehicles="2" maxJamLengthInMeters="12.52" jamLengthInVehiclesSum="48" jamLengthInMetersSum="259.74" meanHaltingDuration="10.60" maxHaltingDuration="20.00" haltingDurationSum="53.00" meanIntervalHaltingDuration="10.60" maxIntervalHaltingDuration="20.00" intervalHaltingDurationSum="53.00" startedHalts="5.00" meanVehicleNumber="0.42" maxVehicleNumber="2" />
+</detector>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 02/01/21 16:21:43 by Eclipse SUMO GUI Version 1.7.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="simulation/sin.net.xml"/>
+        <route-files value="simulation/sin.rou.xml"/>
+        <additional-files value="simulation/sin.add.xml"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="simulation/log.xml"/>
+    </output>
+
+    <traci_server>
+        <remote-port value="55668"/>
+    </traci_server>
+
+</configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e2_file.xsd">
+   <interval begin="0.00" end="500.00" id="NNS" sampledSeconds="765.71" nVehEntered="42" nVehLeft="41" nVehSeen="42" meanSpeed="2.65" meanTimeLoss="13.40" meanOccupancy="16.71" maxOccupancy="47.01" meanMaxJamLengthInVehicles="0.58" meanMaxJamLengthInMeters="3.52" maxJamLengthInVehicles="3" maxJamLengthInMeters="27.52" jamLengthInVehiclesSum="296" jamLengthInMetersSum="1778.62" meanHaltingDuration="5.55" maxHaltingDuration="39.00" haltingDurationSum="361.00" meanIntervalHaltingDuration="5.55" maxIntervalHaltingDuration="39.00" intervalHaltingDurationSum="361.00" startedHalts="66.00" meanVehicleNumber="1.61" maxVehicleNumber="5" />
+   <interval begin="500.00" end="818.00" id="NNS" sampledSeconds="528.89" nVehEntered="30" nVehLeft="30" nVehSeen="31" meanSpeed="2.75" meanTimeLoss="12.37" meanOccupancy="17.97" maxOccupancy="46.00" meanMaxJamLengthInVehicles="0.63" meanMaxJamLengthInMeters="3.82" maxJamLengthInVehicles="4" maxJamLengthInMeters="33.23" jamLengthInVehiclesSum="205" jamLengthInMetersSum="1233.40" meanHaltingDuration="4.87" maxHaltingDuration="28.00" haltingDurationSum="258.00" meanIntervalHaltingDuration="4.87" maxIntervalHaltingDuration="28.00" intervalHaltingDurationSum="258.00" startedHalts="53.00" meanVehicleNumber="1.76" maxVehicleNumber="5" />
+</detector>

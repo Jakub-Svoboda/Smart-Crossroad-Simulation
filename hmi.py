@@ -1,5 +1,11 @@
+# Author: Jakub Svoboda
+# Date: 23.11.2020
+# Email: xsvobo0z@stud.fit.vutbr.cz, svo.jakub95@gmail.com
+#
+# This script runs the human-machine interface for the controlled crossroad
+
+
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
-import PyQt5.QtChart
 import pyqtgraph as pg
 import sys
 import os
@@ -7,6 +13,7 @@ import paho.mqtt.client as mqtt
 import threading
 
 client = None
+label = None
 
 class Ui(QtWidgets.QMainWindow):
 	def __init__(self):
@@ -18,30 +25,21 @@ class Ui(QtWidgets.QMainWindow):
 		pg.setConfigOption('foreground', 'k')
 
 		self.g1 = pg.PlotWidget()
-		self.tab.layout().addWidget(self.g1)
+		self.frame_2.layout().addWidget(self.g1)
 
-		self.g2 = pg.PlotWidget()
-		self.tab_2.layout().addWidget(self.g2)
+		global label
+		label = self.label
 
-		self.g1.setXRange(-100, 0, padding=0.00)
-		self.g2.setXRange(-100, 0, padding=0.00)
-		self.g1.setYRange(0, 80, padding=0.02)
-		self.g2.setYRange(0, 80, padding=0.02)
+		self.g1.setXRange(-100, 0, padding=0.01)
+		self.g1.setYRange(-50, 50, padding=0.02)
 		styles = {'color':'r', 'font-size':'13px'}
-		self.g1.setLabel('left', 'Occupancy', **styles)
+		self.g1.setLabel('left', 'Occupancy (North-South v East-West)', **styles)
 		self.g1.setLabel('bottom', 'Time (Step)', **styles)
-		self.g2.setLabel('left', 'Occupancy', **styles)
-		self.g2.setLabel('bottom', 'Time (Step)', **styles)
 		self.g1.showGrid(x=True, y=True)
-		self.g2.showGrid(x=True, y=True)
 
 		Ui.northX = [-200,-190,-180,-170,-160,-150,-140,-130,-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0]
 		Ui.northY = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-		Ui.southX = [-200,-190,-180,-170,-160,-150,-140,-130,-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0]
-		Ui.southY = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
-		self.comboBox.currentIndexChanged.connect(self.northChanged)
-		self.comboBox_2.currentIndexChanged.connect(self.southChanged)
 		self.show()
 
 		self.thread = None
@@ -51,61 +49,47 @@ class Ui(QtWidgets.QMainWindow):
 		self.timer.start(200) # Time here is in milliseconds
 
 	def updateCharts(self):
+
 		self.g1.plot(Ui.northX, Ui.northY, fillBrush=pg.mkBrush(0, 0, 255, 90), fillLevel = 0, pen=pg.mkPen('138', width=5), clear = True)
-		self.g2.plot(Ui.southX, Ui.southY, fillBrush=pg.mkBrush(0, 0, 255, 90), fillLevel = 0, pen=pg.mkPen('138', width=5), clear = True)
-
-
+		self.g1.plot([i for i in range(-200, 10, 10)], [20 for y in range(-200, 10, 10)], pen=pg.mkPen('r', width=2))
+		self.g1.plot([i for i in range(-200, 10, 10)], [-20 for y in range(-200, 10, 10)], pen=pg.mkPen('r', width=2))
 		self.timer.start(200) # Time here is in milliseconds
 
 
 	def northChanged(self, value):
-		if value == 0:
-			client.publish("sin/crossroad/setNorth", "northBalanced")
-		elif value == 1:
-			client.publish("sin/crossroad/setNorth", "northNSBoost")
-		elif value == 2:
-			client.publish("sin/crossroad/setNorth", "northEWBoost")
-		elif value == 3:
-			client.publish("sin/crossroad/setNorth", "northNSOnly")
-		elif value == 4:
-			client.publish("sin/crossroad/setNorth", "northEWOnly")	
+		pass
 
-	def southChanged(self, value):
-		if value == 0:
-			client.publish("sin/crossroad/setSouth", "southBalanced")
-		elif value == 1:
-			client.publish("sin/crossroad/setSouth", "southNEBoost")
-		elif value == 2:
-			client.publish("sin/crossroad/setSouth", "southNWBoost")
-		elif value == 3:
-			client.publish("sin/crossroad/setSouth", "southEWBoost")	
-		elif value == 4:
-			client.publish("sin/crossroad/setSouth", "southNEOnly")
-		elif value == 5:
-			client.publish("sin/crossroad/setSouth", "southNWOnly")	
-		elif value == 6:
-			client.publish("sin/crossroad/setSouth", "southEWOnly")		
+	
 
 def startMqtt():
 	global client
 	broker_address="broker.hivemq.com"
+	#broker_address="localhost"
 	client = mqtt.Client("hmi") #create new instance
 	client.on_message=on_message #attach function to callback
 	client.connect(broker_address) #connect to broker
-	client.subscribe("sin/crossroad/north")
-	client.subscribe("sin/crossroad/south")
+	client.subscribe("sin/crossroad/north/occupancy")
+	client.subscribe("sin/currentProgram")
 	client.loop_start() #start the loop
-
 	return client
 
 def on_message(client, userdata, message):
-	#print("message received " ,str(message.payload.decode("utf-8")))
-	if(message.topic == "sin/crossroad/north"):
+	msg = str(message.payload.decode("utf-8"))
+	#print("message received " , msg + " in topic " + message.topic) 
+	if message.topic == "sin/crossroad/north/occupancy":
 		Ui.northY.pop(0)
 		Ui.northY.append(float(str(message.payload.decode("utf-8"))))
-	else:
-		Ui.southY.pop(0)
-		Ui.southY.append(float(str(message.payload.decode("utf-8"))))
+	elif message.topic == "sin/currentProgram":
+		if label is not None:
+			if msg == "northBalanced":
+				label.setText("Balanced")
+			elif msg == "northNSOnly":
+				label.setText("North-South Only")
+			elif msg == "northEWOnly":
+				label.setText("East-West Only")	
+			else:
+				label.setText(msg)	
+
 
 
 def main(args=None):

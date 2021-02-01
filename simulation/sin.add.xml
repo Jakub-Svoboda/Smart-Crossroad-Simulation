@@ -13,7 +13,13 @@
     </rerouter>-->>
 
     <!--<e1Detector id="det_0" lane="e4_0" pos="10" freq="500" file="det.out.xml" />-->
-    <laneAreaDetector id="det_1" lanes="e4_0" pos="50" endPos="93.47" freq="500" file="det1.out.xml" /> 
+    <laneAreaDetector id="NNS" lanes="e4_0" pos="50" endPos="93.47" freq="500" file="NNS.out.xml" /> 
+    <laneAreaDetector id="NNS2" lanes="-e6_0" pos="10" endPos="45.7" freq="500" file="NNS2.out.xml" />
+
+    <laneAreaDetector id="NEW" lanes="-e5_0" pos="30" endPos="78.5" freq="500" file="NEW.out.xml" /> 
+    <laneAreaDetector id="NEW2" lanes="-e7_0" pos="30" endPos="67.8" freq="500" file="NEW2.out.xml" />
+
+
     <laneAreaDetector id="det_2" lanes="-e3_0" pos="25" endPos="68.12" freq="500" file="det2.out.xml" /> 
   
   <tlLogic id="n5" type="static" programID="northNSBoost" offset="0">

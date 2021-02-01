@@ -4,6 +4,7 @@ det1.out.xml
 det2.out.xml
 ui.ui.autosave
 log.xml
+.metadata
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -134,3 +135,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/.metadata/
