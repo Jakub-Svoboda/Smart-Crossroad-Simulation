@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<System Name="controller" Comment="">
+	<VersionInfo Version="1.0" Author="svoja" Date="2020-11-22">
+	</VersionInfo>
+	<Application Name="controllerApp" Comment="">
+		<SubAppNetwork>
+			<FB Name="E_CYCLE" Type="E_CYCLE" Comment="" x="1739.1304347826085" y="965.2173913043478">
+				<Parameter Name="DT" Value="T#1s"/>
+			</FB>
+			<FB Name="E_SWITCH" Type="E_SWITCH" Comment="" x="3217.391304347826" y="869.5652173913043">
+			</FB>
+			<FB Name="E_PERMIT" Type="E_PERMIT" Comment="" x="7830.434782608695" y="1434.782608695652">
+			</FB>
+			<FB Name="E_CTU" Type="E_CTU" Comment="" x="9217.391304347826" y="1478.2608695652173">
+			</FB>
+			<FB Name="E_SR" Type="E_SR" Comment="" x="4608.695652173913" y="1043.4782608695652">
+			</FB>
+			<EventConnections>
+				<Connection Source="E_CYCLE.EO" Destination="E_SWITCH.EI" Comment="" dx1="478.2608695652174"/>
+				<Connection Source="E_PERMIT.EO" Destination="E_CTU.CU" Comment="" dx1="413.04347826086956"/>
+				<Connection Source="E_SWITCH.EO0" Destination="E_SR.S" Comment="" dx1="413.04347826086956"/>
+				<Connection Source="E_SWITCH.EO1" Destination="E_SR.R" Comment="" dx1="413.04347826086956"/>
+				<Connection Source="E_SR.EO" Destination="E_PERMIT.EI" Comment="" dx1="1421.7391304347825"/>
+			</EventConnections>
+			<DataConnections>
+				<Connection Source="E_SR.Q" Destination="E_SWITCH.G" Comment="" dx1="52.17391304347826" dx2="52.17391304347826" dy="-86.95652173913044"/>
+				<Connection Source="E_SR.Q" Destination="E_PERMIT.PERMIT" Comment="" dx1="1421.7391304347825"/>
+			</DataConnections>
+		</SubAppNetwork>
+	</Application>
+	<Device Name="test" Type="FORTE_PC" Comment="" x="1478.2608695652173" y="1808.695652173913">
+		<Parameter Name="MGR_ID" Value="&quot;localhost:61503&quot;"/>
+		<Attribute Name="Profile" Type="STRING" Value="HOLOBLOC" Comment="device profile"/>
+		<Attribute Name="Color" Type="STRING" Value="145,103,219" Comment="color"/>
+		<Resource Name="testyRESy" Type="EMB_RES" Comment="" x="0.0" y="0.0">
+			<FBNetwork>
+				<FB Name="SUBSCRIBE_1" Type="SUBSCRIBE_1" Comment="" x="-608.695652173913" y="2782.608695652174">
+					<Parameter Name="QI" Value="1"/>
+					<Parameter Name="ID" Value="raw[].mqtt[tcp://broker.hivemq.com:1883, watcherkuba, sin/crossroad/north/occupancy]"/>
+				</FB>
+				<FB Name="PUBLISH_1" Type="PUBLISH_1" Comment="" x="6434.782608695652" y="2956.5217391304345">
+					<Parameter Name="QI" Value="1"/>
+					<Parameter Name="ID" Value="raw[].mqtt[tcp://broker.hivemq.com:1883, watcherkuba, sin/crossroad/setNEW]"/>
+				</FB>
+				<FB Name="F_STRING_TO_REAL" Type="F_STRING_TO_REAL" Comment="" x="1826.086956521739" y="3652.173913043478">
+				</FB>
+				<FB Name="F_LT" Type="F_LT" Comment="" x="3304.3478260869565" y="2956.5217391304345">
+				</FB>
+				<FB Name="F_GT" Type="F_GT" Comment="" x="3304.3478260869565" y="4782.608695652174">
+				</FB>
+				<FB Name="F_INT_TO_REAL" Type="F_INT_TO_REAL" Comment="" x="1826.086956521739" y="2782.608695652174">
+					<Parameter Name="IN" Value="-20"/>
+				</FB>
+				<FB Name="F_INT_TO_REAL_1" Type="F_INT_TO_REAL" Comment="" x="1826.086956521739" y="4956.521739130435">
+					<Parameter Name="IN" Value="20"/>
+				</FB>
+				<FB Name="PUBLISH_2" Type="PUBLISH_1" Comment="" x="6704.347826086956" y="5008.695652173913">
+					<Parameter Name="QI" Value="1"/>
+					<Parameter Name="ID" Value="raw[].mqtt[tcp://broker.hivemq.com:1883, watcherkuba, sin/crossroad/setNNS]"/>
+				</FB>
+				<FB Name="F_BOOL_TO_STRING" Type="F_BOOL_TO_STRING" Comment="" x="4086.95652173913" y="3217.391304347826">
+				</FB>
+				<FB Name="F_BOOL_TO_STRING_1" Type="F_BOOL_TO_STRING" Comment="" x="4173.913043478261" y="5217.391304347826">
+				</FB>
+				<EventConnections>
+					<Connection Source="START.COLD" Destination="SUBSCRIBE_1.INIT" Comment="" dx1="591.3043478260869"/>
+					<Connection Source="START.WARM" Destination="SUBSCRIBE_1.INIT" Comment="" dx1="591.3043478260869"/>
+					<Connection Source="START.COLD" Destination="PUBLISH_1.INIT" Comment="" dx1="3186.9565217391305"/>
+					<Connection Source="START.WARM" Destination="PUBLISH_1.INIT" Comment="" dx1="3186.9565217391305"/>
+					<Connection Source="SUBSCRIBE_1.IND" Destination="F_STRING_TO_REAL.REQ" Comment="" dx1="1100.0"/>
+					<Connection Source="F_STRING_TO_REAL.CNF" Destination="F_LT.REQ" Comment="" dx1="265.2173913043478"/>
+					<Connection Source="F_STRING_TO_REAL.CNF" Destination="F_GT.REQ" Comment="" dx1="417.39130434782606"/>
+					<Connection Source="START.COLD" Destination="F_INT_TO_REAL.REQ" Comment="" dx1="556.5217391304348"/>
+					<Connection Source="START.WARM" Destination="F_INT_TO_REAL.REQ" Comment="" dx1="556.5217391304348"/>
+					<Connection Source="START.COLD" Destination="F_INT_TO_REAL_1.REQ" Comment="" dx1="556.5217391304348"/>
+					<Connection Source="START.WARM" Destination="F_INT_TO_REAL_1.REQ" Comment="" dx1="556.5217391304348"/>
+					<Connection Source="START.WARM" Destination="PUBLISH_2.INIT" Comment="" dx1="3186.9565217391305"/>
+					<Connection Source="START.COLD" Destination="PUBLISH_2.INIT" Comment="" dx1="3186.9565217391305"/>
+					<Connection Source="F_LT.CNF" Destination="F_BOOL_TO_STRING.REQ" Comment="" dx1="204.3478260869565"/>
+					<Connection Source="F_BOOL_TO_STRING.CNF" Destination="PUBLISH_1.REQ" Comment="" dx1="700.0"/>
+					<Connection Source="F_GT.CNF" Destination="F_BOOL_TO_STRING_1.REQ" Comment="" dx1="247.82608695652172"/>
+					<Connection Source="F_BOOL_TO_STRING_1.CNF" Destination="PUBLISH_2.REQ" Comment="" dx1="791.3043478260869"/>
+				</EventConnections>
+				<DataConnections>
+					<Connection Source="SUBSCRIBE_1.RD_1" Destination="F_STRING_TO_REAL.IN" Comment="" dx1="1100.0"/>
+					<Connection Source="F_INT_TO_REAL_1.OUT" Destination="F_GT.IN2" Comment="" dx1="486.95652173913044"/>
+					<Connection Source="F_STRING_TO_REAL.OUT" Destination="F_GT.IN1" Comment="" dx1="417.39130434782606"/>
+					<Connection Source="F_STRING_TO_REAL.OUT" Destination="F_LT.IN1" Comment="" dx1="265.2173913043478"/>
+					<Connection Source="F_INT_TO_REAL.OUT" Destination="F_LT.IN2" Comment="" dx1="334.7826086956522"/>
+					<Connection Source="F_BOOL_TO_STRING.OUT" Destination="PUBLISH_1.SD_1" Comment="" dx1="700.0"/>
+					<Connection Source="F_LT.OUT" Destination="F_BOOL_TO_STRING.IN" Comment="" dx1="204.3478260869565"/>
+					<Connection Source="F_GT.OUT" Destination="F_BOOL_TO_STRING_1.IN" Comment="" dx1="247.82608695652172"/>
+					<Connection Source="F_BOOL_TO_STRING_1.OUT" Destination="PUBLISH_2.SD_1" Comment="" dx1="791.3043478260869"/>
+				</DataConnections>
+			</FBNetwork>
+		</Resource>
+	</Device>
+	<Segment Name="Ethernet" Type="Ethernet" Comment="" x="3739.1304347826085" y="1043.4782608695652" dx1="1304.3478260869565">
+		<Attribute Name="Color" Type="STRING" Value="233,43,189" Comment="color"/>
+	</Segment>
+	<Link SegmentName="Ethernet" CommResource="test" Comment="">
+	</Link>
+</System>
